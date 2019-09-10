@@ -72,14 +72,15 @@ header h2 {
 
 li {
     display: flex;
-    flex-flow: row-reverse nowrap;
+    flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
 }
 
 i {
-    transition: all 0.3s;
+    transition: opacity 0.3s;
     opacity: .5;
+    padding-right: 20px;
 }
 
 li:hover i {

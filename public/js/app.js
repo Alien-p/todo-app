@@ -8,9 +8,14 @@ $(document).ready(function () {
         }
     });
 
-    $('.list').on('click', 'i', function() {
+    $('.list').on('click', 'i', function(event) {
+        event.stopPropagation();
         deleteTodo( $(this).parent() );    
-    })
+    });
+
+    $('.list').on('click', 'li', function() {
+        markTodoDone( $(this) );
+    });
     
 });
 
@@ -21,13 +26,32 @@ function addToDos(todos) {
 }
 
 function addTodo(todo) {
-    let newTodo = $('<li class="task"> <i class="fas fa-trash-alt"></i>' + todo.name + '</li>');
+    let newTodo = $('<li class="task">' + todo.name + '<i class="fas fa-trash-alt"></i> </li>');
     newTodo.data('id', todo._id);
     newTodo.data('completed', todo.completed);
 
     if (todo.completed) newTodo.addClass("done");
 
     $('.list').append(newTodo);
+}
+
+function markTodoDone(todo) {
+    let updateUrl = "/api/todos/" + todo.data('id');
+    let isDone = !todo.data('completed');
+    
+    $.ajax( {
+        type: 'PUT',
+        url: updateUrl,
+        data: { completed: isDone }
+    })
+    .then( function(data) {
+        todo.data('completed', isDone);
+        todo.toggleClass("done");
+    })
+    .catch( function(err) {
+        console.log(err);
+    });
+    
 }
 
 function deleteTodo(removeTodo) {
